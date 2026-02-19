@@ -1,4 +1,4 @@
-# 1) Monitoraggio della Rete Cassa-Server (`check_network.sh`)
+# 1) Analisi e resilienza della connessione (`check_network.sh`)
 
 Nel sistema di casse analizzato, la **connessione tra cassa e server deve essere stabile**.  
 Instabilità o latenze elevate possono causare:
@@ -47,16 +47,17 @@ SERVER_IP="8.8.8.8" # IP del server da controllare
 LOG_FILE="cassa.log" # File log
 SOGLIA_MS=200 # Latenza massima (ms)
 CASSA_ID="CASSA_01" # ID univoco della cassa
----
-##  Esecuzione
-# Esecuzione standard (usa IP e soglia di default)
-./check_network.sh
 
-# Esecuzione con IP e soglia personalizzati
-# Esempio: server locale con soglia 100ms
+---
+
+##  Esecuzione
+Esecuzione standard (usa IP e soglia di default)
+./check_network.sh
+Esecuzione con IP e soglia personalizzati
+Esempio: server locale con soglia 100ms
 ./check_network.sh 192.168.1.50 100
 
-# 2) Gestione Buffer Vendite Offline (`svuota_buffer.sh`)
+# 2) Svuotamento sicuro del buffer vendite (`svuota_buffer.sh`)
 
 Nel sistema di casse analizzato, **le vendite registrate offline devono essere salvaguardate**.  
 Un buffer locale non gestito correttamente può causare:
@@ -97,21 +98,24 @@ In particolare:
 - Registra ogni operazione in `cassa.log` con timestamp, stato e dettagli  
 
 ---
+
 ## Configurazione
 BUFFER="vendite_buffer.csv" # File temporaneo vendite offline  
 LOG_FILE="cassa.log"        # File log  
 CASSA_ID="CASSA_01"        # ID univoco della cassa  
+
 ---
+
 ## Esecuzione
-# Rendi eseguibile lo script  
+Rendi eseguibile lo script  
 chmod +x svuota_buffer.sh  
 
-# Esecuzione standard  
+Esecuzione standard  
 ./svuota_buffer.sh
 
 ---
 
-# 3) Generazione Scontrini Offline (`genera_scontrino.sh`)
+# 3) Ricostruzione scontrini quando il server non è raggiungibile (`genera_scontrino.sh`)
 
 Nel sistema di casse analizzato, **le vendite offline devono essere presentate in modo leggibile**.  
 Un buffer tecnico con soli codici prodotto può causare:
@@ -151,6 +155,7 @@ In particolare:
 - Registra l’evento in `cassa.log` con tag `PRINT_RECEIPT`  
 
 ---
+
 ##  Configurazione
 BUFFER="vendite_buffer.csv"    # File buffer vendite offline  
 PRODOTTI="prodotti_default.csv" # File anagrafica prodotti  
@@ -160,10 +165,10 @@ CASSA_ID="CASSA_01"           # ID univoco della cassa
 ---
 
 ##  Esecuzione
-# Rendi eseguibile lo script  
+Rendi eseguibile lo script  
 chmod +x genera_scontrino.sh  
 
-# Esecuzione standard  
+Esecuzione standard  
 ./genera_scontrino.sh  
 
 **Output:** lo scontrino viene stampato a terminale e l’evento registrato in `cassa.log`.
